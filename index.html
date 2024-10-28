@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energía Hidráulica</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #00796b;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        p.propietario {
+            font-style: italic;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #00796b;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        button {
+            background-color: #004d40;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00695c;
+        }
+
+        /* Generador y molino */
+        #generator {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(to bottom, #80deea, #b2dfdb);
+            margin-top: 20px;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .wheel {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid #004d40;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #00796b;
+        }
+
+        .aspa {
+            width: 8px;
+            height: 60px;
+            background-color: white;
+            position: absolute;
+            border-radius: 5px;
+        }
+
+        .aspa:nth-child(1) { transform: rotate(0deg) translateY(-60px); }
+        .aspa:nth-child(2) { transform: rotate(72deg) translateY(-60px); }
+        .aspa:nth-child(3) { transform: rotate(144deg) translateY(-60px); }
+        .aspa:nth-child(4) { transform: rotate(216deg) translateY(-60px); }
+        .aspa:nth-child(5) { transform: rotate(288deg) translateY(-60px); }
+
+        @keyframes spin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* Agua en movimiento */
+        .water-flow {
+            position: absolute;
+            width: 20px;
+            height: 100px;
+            background-color: #2196f3;
+            border-radius: 10px;
+            bottom: 10px;
+            opacity: 0;
+            animation: flow 2s linear infinite;
+            display: none; /* Ocultar por defecto */
+        }
+
+        .water-flow:nth-child(1) { left: 30%; }
+        .water-flow:nth-child(2) { left: 50%; }
+        .water-flow:nth-child(3) { left: 70%; }
+
+        @keyframes flow {
+            from {
+                top: -50px;
+                opacity: 1;
+            }
+            to {
+                top: 300px;
+                opacity: 0;
+            }
+        }
+
+        /* Indicador de estado */
+        #status {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #004d40;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Energía Hidráulica</h1>
+        <p class="propietario">Propietario: Manuela Naranjo y Anlly Bedoya</p>
+        <p>Descubre el poder del agua para generar energía.</p>
+    </header>
+
+    <main>
+        <!-- Sección: ¿Qué es la energía hidráulica? -->
+        <section>
+            <h2>¿Qué es la Energía Hidráulica?</h2>
+            <p>La energía hidráulica es aquella que se obtiene del movimiento del agua. Este movimiento se convierte en energía mecánica y luego en energía eléctrica mediante generadores como los molinos hidráulicos.</p>
+        </section>
+
+        <!-- Experimento interactivo: Generador Hidráulico -->
+        <section>
+            <h2>Experimento Interactivo: Generador Hidráulico</h2>
+            <p>Presiona el botón para activar el molino hidráulico y ver cómo el agua en movimiento impulsa las aspas.</p>
+            <button id="btn-generador">Activar Molino</button>
+
+            <div id="generator">
+                <!-- Indicador de estado -->
+                <div id="status">Molino Apagado</div>
+
+                <!-- Molino con aspas -->
+                <div class="wheel" id="molino">
+                    <div class="aspa"></div>
+                    <div class="aspa"></div>
+                    <div class="aspa"></div>
+                    <div class="aspa"></div>
+                    <div class="aspa"></div>
+                </div>
+
+                <!-- Flujo de agua -->
+                <div class="water-flow" id="agua1"></div>
+                <div class="water-flow" id="agua2"></div>
+                <div class="water-flow" id="agua3"></div>
+            </div>
+        </section>
+    </main>
+
+    
+    <script>
+        // Referencias a los elementos
+        const boton = document.getElementById('btn-generador');
+        const molino = document.getElementById('molino');
+        const status = document.getElementById('status');
+        const aguas = document.querySelectorAll('.water-flow');
+
+        boton.addEventListener('click', () => {
+            // Activar el molino
+            molino.style.animation = 'spin 5s linear infinite';
+            status.textContent = 'Molino en Funcionamiento';
+
+            // Mostrar flujo de agua
+            aguas.forEach(agua => {
+                agua.style.display = 'block';
+                agua.style.opacity = '1';
+            });
+
+            // Detener el molino y ocultar el agua después de 5 segundos
+            setTimeout(() => {
+                molino.style.animation = 'none';
+                status.textContent = 'Molino Apagado';
+                aguas.forEach(agua => {
+                    agua.style.display = 'none';
+                });
+            }, 5000);
+        });
+    </script>
+
+</body>
+</html>
+
+
